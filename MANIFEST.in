@@ -1,0 +1,6 @@
+include README.md
+include LICENSE
+recursive-include immutable_log_widget/static *
+recursive-include immutable_log_widget/templates *
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]

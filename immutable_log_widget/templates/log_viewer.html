@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Immutable Log Viewer - {{ filename }}</title>
+    <link rel="stylesheet" href="{{ url_for('immutable_logs.static', filename='css/widget.css') }}">
+</head>
+<body>
+    <div class="log-viewer-container">
+        <!-- Header Section -->
+        <header class="log-viewer-header">
+            <h1>
+                <span class="icon">📋</span>
+                Immutable Log Viewer
+            </h1>
+            <div class="file-info">
+                <span class="filename">{{ filename }}</span>
+                <span class="file-meta">{{ total_lines }} lines • {{ file_size }}</span>
+            </div>
+        </header>
+
+        <!-- Controls Section -->
+        <div class="controls-section">
+            <div class="control-group">
+                <button id="verify-btn" class="btn btn-primary" title="Verify log file integrity">
+                    <span class="icon">🔍</span>
+                    Verify Integrity
+                </button>
+                
+                {% if enable_download %}
+                <button id="download-btn" class="btn btn-secondary" title="Download log file">
+                    <span class="icon">⬇️</span>
+                    Download Log
+                </button>
+                {% endif %}
+                
+                <button id="refresh-btn" class="btn btn-secondary" title="Refresh log view">
+                    <span class="icon">🔄</span>
+                    Refresh
+                </button>
+            </div>
+            
+            <div class="control-group">
+                <input type="search" id="search-box" class="search-input" placeholder="Search logs..." disabled>
+                <span class="search-hint">(Coming soon)</span>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div id="progress-bar" class="progress-bar hidden">
+            <div class="progress-fill"></div>
+            <span class="progress-text">Loading...</span>
+        </div>
+
+        <!-- Status Messages -->
+        <div id="status-message" class="status-message hidden"></div>
+
+        <!-- Log Display Area -->
+        <main class="log-display-container">
+            <div id="log-content" class="log-content">
+                <!-- Log lines will be inserted here dynamically -->
+            </div>
+            
+            <div id="loading-indicator" class="loading-indicator hidden">
+                <div class="spinner"></div>
+                <p>Loading more logs...</p>
+            </div>
+            
+            <div id="empty-state" class="empty-state hidden">
+                <span class="icon">📄</span>
+                <p>No log entries found</p>
+            </div>
+        </main>
+
+        <!-- Footer Section -->
+        <footer class="log-viewer-footer">
+            <div class="footer-stats">
+                <span id="loaded-lines">0</span> of <span id="total-lines">{{ total_lines }}</span> lines loaded
+            </div>
+            <div class="footer-info">
+                <span class="legend-item">
+                    <span class="legend-color log-error"></span> ERROR
+                </span>
+                <span class="legend-item">
+                    <span class="legend-color log-warn"></span> WARN
+                </span>
+                <span class="legend-item">
+                    <span class="legend-color log-info"></span> INFO
+                </span>
+                <span class="legend-item">
+                    <span class="legend-color log-debug"></span> DEBUG
+                </span>
+                <span class="legend-item">
+                    <span class="legend-color tampered"></span> TAMPERED
+                </span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Configuration passed to JavaScript -->
+    <script>
+        window.LOG_VIEWER_CONFIG = {
+            apiBaseUrl: '{{ api_base_url }}',
+            totalLines: {{ total_lines }},
+            enableDownload: {{ enable_download|tojson }}
+        };
+    </script>
+    
+    <script src="{{ url_for('immutable_logs.static', filename='js/widget.js') }}"></script>
+</body>
+</html>
